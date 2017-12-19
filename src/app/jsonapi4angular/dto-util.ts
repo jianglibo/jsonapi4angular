@@ -1,5 +1,5 @@
 import { extend } from 'webdriver-js-extender';
-import { AttributesBase } from 'data-shape';
+import { AttributesBase } from 'data-shape-ng';
 
 export class DtoUtil {
     static cloneAttributes<T extends AttributesBase>(attr: T) {

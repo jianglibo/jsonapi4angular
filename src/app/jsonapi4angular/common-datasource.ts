@@ -17,7 +17,7 @@ import {
   SortPhrase,
   FilterPhrase,
   ListBody
-} from 'data-shape';
+} from 'data-shape-ng';
 
 /**
  * Data source to provide what data should be rendered in the table. Note that the data source

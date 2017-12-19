@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/reduce';
+import 'rxjs/add/observable/of';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { JsonApiError } from '../jsonapi4angular/http-datastore';
 
@@ -18,7 +19,7 @@ import {
   USERS_BODY,
   USER_BODY,
   LOGIN_SUCCESS_BODY
-} from 'data-shape';
+} from 'data-shape-ng';
 
 describe('HttpDatastoreService', () => {
   beforeEach(() => {

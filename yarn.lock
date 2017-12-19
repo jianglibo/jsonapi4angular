@@ -1421,9 +1421,12 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-data-shape@^1.0.0:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/data-shape/-/data-shape-1.0.8.tgz#77c80118ed2ba91c90bfacd2ed44c9cba4fe1de1"
+data-shape-ng@^1.0.0:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/data-shape-ng/-/data-shape-ng-1.0.3.tgz#03f54339746e624e4b8e6336ccc937accccfa263"
+  dependencies:
+    reflect-metadata "^0.1.10"
+    rxjs "^5.5.2"
 
 date-now@^0.1.4:
   version "0.1.4"
@@ -4677,7 +4680,7 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
-reflect-metadata@^0.1.2:
+reflect-metadata@^0.1.10, reflect-metadata@^0.1.2:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.10.tgz#b4f83704416acad89988c9b15635d47e03b9344a"
 

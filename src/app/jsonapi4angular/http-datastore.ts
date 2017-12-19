@@ -17,7 +17,7 @@ import {
   ListBody,
   isModelInstance,
   SingleBody
-} from 'data-shape';
+} from 'data-shape-ng';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 export interface JsonApiError {

@@ -4,11 +4,9 @@ import { HttpDatastore } from './http-datastore';
 import { CommonDataSource } from './common-datasource';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [],
-  exports: [ HttpDatastore, CommonDataSource ]
+  exports: []
 })
 export class Jsonapi4angularModule {
   static forRoot() {
