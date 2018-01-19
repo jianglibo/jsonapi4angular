@@ -6,6 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/merge';
+import { element } from 'protractor';
 import {
   AttributesBase,
   JsonapiObject,
@@ -30,12 +31,14 @@ export class CommonDataSource<
   A extends AttributesBase,
   J extends JsonapiObject<A>
 > extends DataSource<J> {
-  _filterChange = new BehaviorSubject('');
-  get filter(): string {
+
+  _filterChange = new BehaviorSubject<FilterPhrase[]>([]);
+
+  get filter(): FilterPhrase[] {
     return this._filterChange.value;
   }
-  set filter(filter: string) {
-    this._filterChange.next(filter);
+  set filter(filters: FilterPhrase[]) {
+    this._filterChange.next(filters);
   }
 
   resultsLength = 0;
@@ -72,17 +75,25 @@ export class CommonDataSource<
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect(): Observable<J[]> {
     // Listen for any changes in the base data, sorting, filtering, or pagination
-    const displayDataChanges = [
-      this._sort.sortChange,
-      this._filterChange,
-      this._paginator.page
+    const displayDataChanges: any[] = [
+      this._filterChange
     ];
+    if (this._sort) {
+      displayDataChanges.push(this._sort.sortChange);
+    }
+     if (this._paginator) {
+       displayDataChanges.push(this._paginator.page);
+     }
 
     return Observable.merge(...displayDataChanges)
       .startWith(null)
       .switchMap(() => {
         this.isLoadingResults = true;
-        return this.findAll();
+        if (this._dataStore) {
+          return this.findAll();
+        } else {
+          return Observable.of(new ListBody<A, J>());
+        }
       })
       .map(listBody => {
         this.isLoadingResults = false;
@@ -126,19 +137,42 @@ export class CommonDataSource<
   }
 
   transFilter(): FilterPhrase[] {
-    return [{ fname: this.filter, value: '' }];
+     return this.filter;
   }
 
   findAll(): Observable<ListBody<A, J>> {
-    return this._dataStore.findAll(
-      this._type,
-      this.transOffsetLimit(),
-      this.transSort(),
-      this.transFilter()
-    );
+      return this._dataStore.findAll(
+        this._type,
+        this.transOffsetLimit(),
+        this.transSort(),
+        this.transFilter()
+      );
   }
 
   disconnect() {}
+
+  addFilter(...filters: FilterPhrase[]): void {
+    const alteredPhrases = filters.filter( fp => {
+      const found = this.filter.find( existFp => {
+        return existFp.fname === fp.fname && existFp.value === fp.value;
+      });
+      return !found;
+    });
+    if (alteredPhrases.length > 0) {
+      this.filter.forEach(e => {
+        const found = alteredPhrases.find(afp => {
+          return afp.fname === e.fname;
+        });
+        if (found) {
+          found.value = e.value;
+        } else {
+          alteredPhrases.push(e);
+        }
+      });
+      this._filterChange.next(alteredPhrases);
+    }
+  }
+
 
   // /** Returns a sorted copy of the database data. */
   // sortData(data: J[]): J[] {
