@@ -56,6 +56,9 @@ fdescribe('common datasource should work.', () => {
 
         tick();
         expect(count).toBe(3);
+        expect(mds._filterChange.value.length).toBe(1);
+        expect(mds._filterChange.value[0].value).toBe('b2');
+        expect(mds._filterChange.value[0].fname).toBe('a');
       })
   );
 
@@ -76,6 +79,9 @@ fdescribe('common datasource should work.', () => {
 
         tick();
         expect(count).toBe(1);
+        expect(mds._filterChange.value.length).toBe(1);
+        expect(mds._filterChange.value[0].value).toBe('b');
+        expect(mds._filterChange.value[0].fname).toBe('a');
       })
   );
 
@@ -96,6 +102,9 @@ fdescribe('common datasource should work.', () => {
 
         tick();
         expect(count).toBe(3);
+        expect(mds._filterChange.value.length).toBe(3);
+        expect(mds._filterChange.value[2].value).toBe('b');
+        expect(mds._filterChange.value[2].fname).toBe('d');
       })
   );
 

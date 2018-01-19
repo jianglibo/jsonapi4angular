@@ -152,25 +152,35 @@ export class CommonDataSource<
   disconnect() {}
 
   addFilter(...filters: FilterPhrase[]): void {
-    const alteredPhrases = filters.filter( fp => {
+    filters.forEach(newItem => {
       const found = this.filter.find( existFp => {
-        return existFp.fname === fp.fname && existFp.value === fp.value;
+        return existFp.fname === newItem.fname;
       });
-      return !found;
+      if (found) {
+        found.value = newItem.value;
+      } else {
+        this.filter.push(newItem);
+      }
     });
-    if (alteredPhrases.length > 0) {
-      this.filter.forEach(e => {
-        const found = alteredPhrases.find(afp => {
-          return afp.fname === e.fname;
-        });
-        if (found) {
-          found.value = e.value;
-        } else {
-          alteredPhrases.push(e);
-        }
-      });
-      this._filterChange.next(alteredPhrases);
-    }
+
+    this._filterChange.next(this.filter.map(a => a));
+    // const alteredPhrases = filters.filter( fp => {
+    //   const found = this.filter.find( existFp => {
+    //     return existFp.fname === fp.fname && existFp.value === fp.value;
+    //   });
+    //   return !found;
+    // });
+    // if (alteredPhrases.length > 0) {
+    //   this.filter.forEach(e => {
+    //     const found = alteredPhrases.find(afp => {
+    //       return afp.fname === e.fname;
+    //     });
+    //     if (!found) {
+    //       alteredPhrases.push(e);
+    //     }
+    //   });
+    //   this._filterChange.next(alteredPhrases);
+    // }
   }
 
 
