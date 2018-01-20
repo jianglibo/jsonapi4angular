@@ -1,6 +1,6 @@
 {
   "name": "jsonapi4angular",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "jsonapi client for angular.",
   "main": "index.ts",
   "scripts": {
