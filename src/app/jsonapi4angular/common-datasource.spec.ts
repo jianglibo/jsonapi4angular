@@ -78,7 +78,7 @@ fdescribe('common datasource should work.', () => {
         mds.addFilter({fname: 'a', value: 'b'});
 
         tick();
-        expect(count).toBe(1);
+        expect(count).toBe(1, 'should emit one value.');
         expect(mds._filterChange.value.length).toBe(1);
         expect(mds._filterChange.value[0].value).toBe('b');
         expect(mds._filterChange.value[0].fname).toBe('a');
