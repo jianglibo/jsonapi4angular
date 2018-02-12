@@ -17,7 +17,9 @@ import {
   PageNumberSize,
   SortPhrase,
   FilterPhrase,
-  ListBody
+  ListBody,
+  SingleBody,
+  isModelInstance
 } from 'data-shape-ng';
 
 /**
@@ -101,23 +103,6 @@ export class CommonDataSource<
         this.isLoadingResults = false;
         return Observable.of([]);
       });
-    //   .map(() => {
-    //     // Filter data
-    //     // this.filteredData =;
-    //     this._dataStore.findAll(this._type).subscribe
-    //     // .filter((item: J) => {
-    //     //   let searchStr = (item.name + item.color).toLowerCase();
-    //     //   return searchStr.indexOf(this.filter.toLowerCase()) !== -1;
-    //     // });
-
-    //     // Sort filtered data
-    //     const sortedData = this.sortData(this.filteredData.slice());
-
-    //     // Grab the page's slice of the filtered sorted data.
-    //     const startIndex = this._paginator.pageIndex * this._paginator.pageSize;
-    //     this.renderedData = sortedData.splice(startIndex, this._paginator.pageSize);
-    //     return this.renderedData;
-    //   });
   }
 
   transOffsetLimit(): PageCursor | PageNumberSize | PageOffsetLimit {
@@ -133,15 +118,6 @@ export class CommonDataSource<
 
   transFilter(): FilterPhrase[] {
     return this.filter;
-  }
-
-  findAll(): Observable<ListBody<A, J>> {
-    return this._dataStore.findAll(
-      this._type,
-      this.transOffsetLimit(),
-      this.transSort(),
-      this.transFilter()
-    );
   }
 
   disconnect() {}
@@ -166,25 +142,32 @@ export class CommonDataSource<
     }
   }
 
-  // /** Returns a sorted copy of the database data. */
-  // sortData(data: J[]): J[] {
-  //   if (!this._sort.active || this._sort.direction === '') { return data; }
+  findAll(): Observable<ListBody<A, J>> {
+    return this._dataStore.findAll(
+      this._type,
+      this.transOffsetLimit(),
+      this.transSort(),
+      this.transFilter()
+    );
+  }
 
-  //   return data.sort((a, b) => {
-  //     let propertyA: number|string = '';
-  //     let propertyB: number|string = '';
+  findRecord(id: number | string, params?: any): Observable<SingleBody<A, J>> {
+    return this._dataStore.findRecord(this._type, id, params);
+  }
 
-  //     switch (this._sort.active) {
-  //       case 'userId': [propertyA, propertyB] = [a.id, b.id]; break;
-  //       case 'userName': [propertyA, propertyB] = [a.name, b.name]; break;
-  //       case 'progress': [propertyA, propertyB] = [a.progress, b.progress]; break;
-  //       case 'color': [propertyA, propertyB] = [a.color, b.color]; break;
-  //     }
+  createRecord(data: J): Observable<SingleBody<A, J>> {
+    return this._dataStore.createRecord(this._type, data);
+  }
 
-  //     let valueA = isNaN(+propertyA) ? propertyA : +propertyA;
-  //     let valueB = isNaN(+propertyB) ? propertyB : +propertyB;
+  saveRecord(model: J, params?: any): Observable<SingleBody<A, J>> {
+    return this._dataStore.saveRecord(model, params);
+  }
 
-  //     return (valueA < valueB ? -1 : 1) * (this._sort.direction === 'asc' ? 1 : -1);
-  //   });
-  // }
+  deleteRecord(model: J | string): Observable<Response> {
+    if (typeof model === 'string') {
+      return this._dataStore.deleteRecord(this._type, model);
+    } else {
+      return this._dataStore.deleteRecord(model);
+    }
+  }
 }
